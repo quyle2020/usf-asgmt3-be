@@ -6,3 +6,6 @@
 /usf-asgmt3-api/bin/Debug/netcoreapp2.0
 /usf-asgmt3-api/obj
 /.vs
+/usf-asgmt3-api/bin
+/usf-asgmt3-api/usf-asgmt3-api.csproj.user
+/usf-asgmt3-api/Properties/PublishProfiles

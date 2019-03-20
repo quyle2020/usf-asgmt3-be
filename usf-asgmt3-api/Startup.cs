@@ -21,9 +21,21 @@ namespace usf_asgmt3_api
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "*"; // TODO: Set this to approriate original for production - see https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-2.2
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("*"); // TODO: Set this to approriate original for production - see https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-2.2
+                });
+            });
+
+
             services.AddMvc();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -51,6 +63,8 @@ namespace usf_asgmt3_api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseMvc();
         }

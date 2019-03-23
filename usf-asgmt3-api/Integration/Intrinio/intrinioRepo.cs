@@ -14,6 +14,7 @@ namespace usf_asgmt3_api.Integration
         private string apiUrlV2 = @"https://api-v2.intrinio.com";
         private string apiKey = "";
         private static readonly HttpClient client = new HttpClient();
+        
 
         public async Task<List<Company>> GetCompaniesAsync()
         {
@@ -57,6 +58,56 @@ namespace usf_asgmt3_api.Integration
             }
             while (nextPage != null);
             
+
+            return retVal;
+        }
+
+        public async Task<List<Price>> GetCompanyPriceAsync(List<string> symbols, string frequency, DateTime start, DateTime end)
+        {
+            
+            var retVal = new List<Price>();
+            int pageNumber = 1;
+            int pageSize = 100;
+
+            string nextPage = string.Empty;
+
+            client.DefaultRequestHeaders.Accept.Clear();
+            var serializer = new DataContractJsonSerializer(typeof(CompanyPriceResponse));
+
+
+            foreach(var symbol in symbols)
+            {
+                string endpoint = $"{apiUrlV2}/securities/{symbol}/prices?api_key={apiKey}&page_size={pageSize}&frequency={frequency}&start_date={start.ToString("yyyy-MM-dd")}&end_date={end.ToString("yyyy-MM-dd")}";
+                do
+                {
+                    try
+                    {
+                        if (pageNumber % 100 == 1) // throttle limits: Users enjoying free data feed subscriptions only are limited to 100 requests per second.
+                            Thread.Sleep(1000);
+                        
+                        var streamTask = client.GetStreamAsync($"{endpoint}&next_page={nextPage}");
+                        var resp = serializer.ReadObject(await streamTask) as CompanyPriceResponse;
+
+                        nextPage = resp.next_page;
+
+                        var data = resp.stock_prices;
+
+                        foreach (var p in data)
+                        {
+                            retVal.Add(p);
+                        }
+                        pageNumber++;
+
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        break;
+                    }
+                }
+                while (nextPage != null);
+            }
+
 
             return retVal;
         }

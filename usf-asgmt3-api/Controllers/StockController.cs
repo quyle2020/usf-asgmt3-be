@@ -10,44 +10,37 @@ using usf_asgmt3_api.model;
 
 namespace usf_asgmt3_api.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     public class StockController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public List<Company> GetAsync()
+        [HttpGet("/stock/getSymbols/")]
+        public List<Company> GetSymbols()
         {
 
             var intrinio = new IntrinioRepo();
             var result = intrinio.GetCompaniesAsync().Result;
-
+            
             return result;
 
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        
+        [HttpPut("/stock/syncSymbols/")]
+        public bool SyncSymbols(List<string> symbols)
         {
-            return "value";
-        }
 
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
+            var intrinio = new IntrinioRepo();
+            //var list = new List<string> { symbol };
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+            DateTime now = DateTime.Now.Date;
+            DateTime start = now.AddYears(-1);
+            string frequency = "daily";
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var result = intrinio.GetCompanyPriceAsync(symbols, frequency, start, now).Result;
+            //todo add repo for db
+
+
+            return true;
         }
     }
 }

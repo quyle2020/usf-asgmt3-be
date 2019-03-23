@@ -48,8 +48,6 @@ namespace usf_asgmt3_api.Integration
                         retVal.Add(p);
                     }
                     pageNumber++;
-
-                    if (pageNumber > 2) break; // break out here for first 200 records -- remove this in production plz
                 }
                 catch (Exception ex)
                 {
@@ -62,7 +60,7 @@ namespace usf_asgmt3_api.Integration
             return retVal;
         }
 
-        public async Task<List<Price>> GetCompanyPriceAsync(List<string> symbols, string frequency, DateTime start, DateTime end)
+        public async Task<List<Price>> GetCompanyPriceAsync(string symbol, string frequency, DateTime start, DateTime end)
         {
             
             var retVal = new List<Price>();
@@ -75,38 +73,35 @@ namespace usf_asgmt3_api.Integration
             var serializer = new DataContractJsonSerializer(typeof(CompanyPriceResponse));
 
 
-            foreach(var symbol in symbols)
+            string endpoint = $"{apiUrlV2}/securities/{symbol}/prices?api_key={apiKey}&page_size={pageSize}&frequency={frequency}&start_date={start.ToString("yyyy-MM-dd")}&end_date={end.ToString("yyyy-MM-dd")}";
+            do
             {
-                string endpoint = $"{apiUrlV2}/securities/{symbol}/prices?api_key={apiKey}&page_size={pageSize}&frequency={frequency}&start_date={start.ToString("yyyy-MM-dd")}&end_date={end.ToString("yyyy-MM-dd")}";
-                do
+                try
                 {
-                    try
+                    if (pageNumber % 100 == 1) // throttle limits: Users enjoying free data feed subscriptions only are limited to 100 requests per second.
+                        Thread.Sleep(1000);
+
+                    var streamTask = client.GetStreamAsync($"{endpoint}&next_page={nextPage}");
+                    var resp = serializer.ReadObject(await streamTask) as CompanyPriceResponse;
+
+                    nextPage = resp.next_page;
+
+                    var data = resp.stock_prices;
+
+                    foreach (var p in data)
                     {
-                        if (pageNumber % 100 == 1) // throttle limits: Users enjoying free data feed subscriptions only are limited to 100 requests per second.
-                            Thread.Sleep(1000);
-                        
-                        var streamTask = client.GetStreamAsync($"{endpoint}&next_page={nextPage}");
-                        var resp = serializer.ReadObject(await streamTask) as CompanyPriceResponse;
-
-                        nextPage = resp.next_page;
-
-                        var data = resp.stock_prices;
-
-                        foreach (var p in data)
-                        {
-                            retVal.Add(p);
-                        }
-                        pageNumber++;
-
-                        
+                        retVal.Add(p);
                     }
-                    catch (Exception ex)
-                    {
-                        break;
-                    }
+                    pageNumber++;
+
+
                 }
-                while (nextPage != null);
+                catch (Exception ex)
+                {
+                    break;
+                }
             }
+            while (nextPage != null);
 
 
             return retVal;

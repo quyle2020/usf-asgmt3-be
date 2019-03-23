@@ -7,6 +7,8 @@ namespace usf_asgmt3_api.model
 {
     public class Price
     {
+        public string id { get; set; }
+        public string ticker { get; set; }
         public string date { get; set; }
         public bool intraperiod { get; set; }
         public string frequency { get; set; }

@@ -1,8 +1,10 @@
-﻿namespace usf_asgmt3_api.model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace usf_asgmt3_api.model
 {
     public class Company
     {
-        public string id { get; set; }
+        [Key]
         public string ticker { get; set; }
         public string name { get; set; }
         public string lei { get; set; }

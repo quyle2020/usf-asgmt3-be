@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using usf_asgmt3_api.Integration.LocalDataRepo;
 
 namespace usf_asgmt3_api
 {
@@ -37,6 +39,11 @@ namespace usf_asgmt3_api
 
 
             services.AddMvc();
+
+
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=locaDataDB;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<LocalDBContext>
+                (options => options.UseSqlServer(connection));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -67,6 +74,7 @@ namespace usf_asgmt3_api
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseMvc();
+;
         }
     }
 }

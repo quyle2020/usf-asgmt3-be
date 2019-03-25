@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using usf_asgmt3_api.Integration.LocalDataRepo;
 
 namespace usf_asgmt3_api.Migrations
 {
     [DbContext(typeof(LocalDBContext))]
-    partial class LocalDBContextModelSnapshot : ModelSnapshot
+    [Migration("20190325043521_added-financial")]
+    partial class addedfinancial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,41 +100,41 @@ namespace usf_asgmt3_api.Migrations
 
                     b.Property<string>("reportDate");
 
-                    b.Property<long?>("cashChange");
+                    b.Property<long>("cashChange");
 
-                    b.Property<long?>("cashFlow");
+                    b.Property<long>("cashFlow");
 
-                    b.Property<long?>("costOfRevenue");
+                    b.Property<long>("costOfRevenue");
 
-                    b.Property<long?>("currentAssets");
+                    b.Property<long>("currentAssets");
 
-                    b.Property<long?>("currentCash");
+                    b.Property<long>("currentCash");
 
-                    b.Property<long?>("currentDebt");
+                    b.Property<long>("currentDebt");
 
-                    b.Property<long?>("grossProfit");
+                    b.Property<long>("grossProfit");
 
-                    b.Property<long?>("netIncome");
+                    b.Property<long>("netIncome");
 
-                    b.Property<long?>("operatingExpense");
+                    b.Property<long>("operatingExpense");
 
-                    b.Property<long?>("operatingIncome");
+                    b.Property<long>("operatingIncome");
 
-                    b.Property<long?>("operatingRevenue");
+                    b.Property<long>("operatingRevenue");
 
-                    b.Property<long?>("researchAndDevelopment");
+                    b.Property<long>("researchAndDevelopment");
 
-                    b.Property<long?>("shareholderEquity");
+                    b.Property<long>("shareholderEquity");
 
-                    b.Property<long?>("totalAssets");
+                    b.Property<long>("totalAssets");
 
-                    b.Property<long?>("totalCash");
+                    b.Property<long>("totalCash");
 
-                    b.Property<long?>("totalDebt");
+                    b.Property<long>("totalDebt");
 
-                    b.Property<long?>("totalLiabilities");
+                    b.Property<long>("totalLiabilities");
 
-                    b.Property<long?>("totalRevenue");
+                    b.Property<long>("totalRevenue");
 
                     b.HasKey("symbol", "reportDate");
 

@@ -10,8 +10,8 @@ using usf_asgmt3_api.Integration.LocalDataRepo;
 namespace usf_asgmt3_api.Migrations
 {
     [DbContext(typeof(LocalDBContext))]
-    [Migration("20190323185228_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190325041918_Initial-DB")]
+    partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,6 +39,59 @@ namespace usf_asgmt3_api.Migrations
                     b.HasKey("ticker");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("usf_asgmt3_api.model.Company_Detail", b =>
+                {
+                    b.Property<string>("symbol")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CEO");
+
+                    b.Property<string>("companyName");
+
+                    b.Property<string>("description");
+
+                    b.Property<string>("exchange");
+
+                    b.Property<string>("industry");
+
+                    b.Property<string>("issueType");
+
+                    b.Property<string>("sector");
+
+                    b.Property<string>("website");
+
+                    b.HasKey("symbol");
+
+                    b.ToTable("Company_Details");
+                });
+
+            modelBuilder.Entity("usf_asgmt3_api.model.Company_Dividend", b =>
+                {
+                    b.Property<string>("symbol");
+
+                    b.Property<string>("exDate");
+
+                    b.Property<float>("amount");
+
+                    b.Property<string>("declaredDate");
+
+                    b.Property<string>("flag");
+
+                    b.Property<string>("indicated");
+
+                    b.Property<string>("paymentDate");
+
+                    b.Property<string>("qualified");
+
+                    b.Property<string>("recordDate");
+
+                    b.Property<string>("type");
+
+                    b.HasKey("symbol", "exDate");
+
+                    b.ToTable("Company_Dividends");
                 });
 
             modelBuilder.Entity("usf_asgmt3_api.model.Price", b =>
@@ -77,6 +130,26 @@ namespace usf_asgmt3_api.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Prices");
+                });
+
+            modelBuilder.Entity("usf_asgmt3_api.model.Symbol", b =>
+                {
+                    b.Property<string>("symbol")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("date");
+
+                    b.Property<string>("iexId");
+
+                    b.Property<bool>("isEnabled");
+
+                    b.Property<string>("name");
+
+                    b.Property<string>("type");
+
+                    b.HasKey("symbol");
+
+                    b.ToTable("Symbols");
                 });
 #pragma warning restore 612, 618
         }

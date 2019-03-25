@@ -153,10 +153,15 @@ namespace usf_asgmt3_api.Controllers
 
         // GET api/values/5
         [HttpGet("/stock/getStockDividend/{symbol}")]
-        public List<Company_Dividend> Get(string symbol)
+        public List<Company_Dividend> GetStockDividend(string symbol)
         {
             return dbContext.Company_Dividends.Where(a => a.symbol.ToLower() == symbol.ToLower()).ToList();
         }
 
+        [HttpGet("/stock/getStockFinance/{symbol}")]
+        public List<Company_Financial> GetStockFinance(string symbol)
+        {
+            return dbContext.Company_Financials.Where(a => a.symbol.ToLower() == symbol.ToLower()).ToList();
+        }
     }
 }

@@ -163,5 +163,12 @@ namespace usf_asgmt3_api.Controllers
         {
             return dbContext.Company_Financials.Where(a => a.symbol.ToLower() == symbol.ToLower()).ToList();
         }
+
+
+        [HttpGet("/stock/getStockDetail/{symbol}")]
+        public Company_Detail GetStockDetail(string symbol)
+        {
+            return dbContext.Company_Details.SingleOrDefault(a => a.symbol.ToLower() == symbol.ToLower());
+        }
     }
 }

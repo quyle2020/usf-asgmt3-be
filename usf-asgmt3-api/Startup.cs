@@ -39,9 +39,8 @@ namespace usf_asgmt3_api
 
 
             services.AddMvc();
-
-
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=locaDataDB;Trusted_Connection=True;ConnectRetryCount=0";
+            
+            var connection = @"Server=tcp:";
             services.AddDbContext<LocalDBContext>
                 (options => options.UseSqlServer(connection));
 

@@ -14,5 +14,7 @@ namespace usf_asgmt3_api.Integration.IxTrading
 
         Task<List<Company_Financial>> GetCompanyFinancialAsync(List<string> symbolNames);
 
+        Task<List<Company_Price>> GetCompanyPricesAsync(List<string> symbolNames);
+
     }
 }

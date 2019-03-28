@@ -39,8 +39,8 @@ namespace usf_asgmt3_api
 
 
             services.AddMvc();
-            
-            var connection = @"Server=tcp:";
+
+            var connection = @"Connection string here";
             services.AddDbContext<LocalDBContext>
                 (options => options.UseSqlServer(connection));
 

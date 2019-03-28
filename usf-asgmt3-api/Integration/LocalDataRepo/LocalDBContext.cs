@@ -23,13 +23,16 @@ namespace usf_asgmt3_api.Integration.LocalDataRepo
 
             modelBuilder.Entity<Company_Financial>()
               .HasKey(c => new { c.symbol, c.reportDate });
+
+            modelBuilder.Entity<Company_Price>()
+            .HasKey(c => new { c.symbol, c.date });
         }
 
         public DbSet<Company> Companies { get; set; }
         public DbSet<Company_Detail> Company_Details { get; set; }
         public DbSet<Company_Dividend> Company_Dividends { get; set; }
         public DbSet<Company_Financial> Company_Financials { get; set; }
-        public DbSet<Price> Prices { get; set; }
+        public DbSet<Company_Price> Company_Prices { get; set; }
         public DbSet<Symbol> Symbols { get; set; }
     }
 }

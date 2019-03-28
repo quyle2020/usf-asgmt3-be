@@ -60,51 +60,51 @@ namespace usf_asgmt3_api.Integration
             return retVal;
         }
 
-        public async Task<List<Price>> GetCompanyPriceAsync(string symbol, string frequency, DateTime start, DateTime end)
-        {
-            
-            var retVal = new List<Price>();
-            int pageNumber = 1;
-            int pageSize = 100;
+        //    public async Task<List<Price>> GetCompanyPriceAsync(string symbol, string frequency, DateTime start, DateTime end)
+        //    {
 
-            string nextPage = string.Empty;
+        //        var retVal = new List<Price>();
+        //        int pageNumber = 1;
+        //        int pageSize = 100;
 
-            client.DefaultRequestHeaders.Accept.Clear();
-            var serializer = new DataContractJsonSerializer(typeof(CompanyPriceResponse));
+        //        string nextPage = string.Empty;
 
-
-            string endpoint = $"{apiUrlV2}/securities/{symbol}/prices?api_key={apiKey}&page_size={pageSize}&frequency={frequency}&start_date={start.ToString("yyyy-MM-dd")}&end_date={end.ToString("yyyy-MM-dd")}";
-            do
-            {
-                try
-                {
-                    if (pageNumber % 100 == 1) // throttle limits: Users enjoying free data feed subscriptions only are limited to 100 requests per second.
-                        Thread.Sleep(1000);
-
-                    var streamTask = client.GetStreamAsync($"{endpoint}&next_page={nextPage}");
-                    var resp = serializer.ReadObject(await streamTask) as CompanyPriceResponse;
-
-                    nextPage = resp.next_page;
-
-                    var data = resp.stock_prices;
-
-                    foreach (var p in data)
-                    {
-                        retVal.Add(p);
-                    }
-                    pageNumber++;
+        //        client.DefaultRequestHeaders.Accept.Clear();
+        //        var serializer = new DataContractJsonSerializer(typeof(CompanyPriceResponse));
 
 
-                }
-                catch (Exception ex)
-                {
-                    break;
-                }
-            }
-            while (nextPage != null);
+        //        string endpoint = $"{apiUrlV2}/securities/{symbol}/prices?api_key={apiKey}&page_size={pageSize}&frequency={frequency}&start_date={start.ToString("yyyy-MM-dd")}&end_date={end.ToString("yyyy-MM-dd")}";
+        //        do
+        //        {
+        //            try
+        //            {
+        //                if (pageNumber % 100 == 1) // throttle limits: Users enjoying free data feed subscriptions only are limited to 100 requests per second.
+        //                    Thread.Sleep(1000);
+
+        //                var streamTask = client.GetStreamAsync($"{endpoint}&next_page={nextPage}");
+        //                var resp = serializer.ReadObject(await streamTask) as CompanyPriceResponse;
+
+        //                nextPage = resp.next_page;
+
+        //                var data = resp.stock_prices;
+
+        //                foreach (var p in data)
+        //                {
+        //                    retVal.Add(p);
+        //                }
+        //                pageNumber++;
 
 
-            return retVal;
-        }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        while (nextPage != null);
+
+
+        //        return retVal;
+        //    }
     }
 }

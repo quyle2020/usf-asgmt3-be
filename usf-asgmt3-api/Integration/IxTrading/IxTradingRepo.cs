@@ -147,5 +147,40 @@ namespace usf_asgmt3_api.Integration.IxTrading
 
             return retVal;
         }
+
+        public async Task<List<Company_Price>> GetCompanyPricesAsync(List<string> symbolNames)
+        {
+            string resultString = "";
+
+            var retVal = new List<Company_Price>();
+
+
+            client.DefaultRequestHeaders.Accept.Clear();
+
+            foreach (var symbol in symbolNames)
+            {
+                string endpoint = $"{apiUrl}/stock/{symbol}/chart/2y"; // get 2 yrs prices
+                HttpResponseMessage response = client.GetAsync(endpoint).GetAwaiter().GetResult();
+
+                // read the Json objects in the API response
+                if (response.IsSuccessStatusCode)
+                {
+                    resultString = await response.Content.ReadAsStringAsync();
+                }
+
+                //now, parse the Json strings as C# objects
+                if (!resultString.Equals(""))
+                {
+                    // https://stackoverflow.com/a/46280739
+                    //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
+                    var data = JsonConvert.DeserializeObject<List<Company_Price>>(resultString);
+                    data.ForEach(a => a.symbol = symbol);
+                    retVal.AddRange(data);
+                }
+            }
+
+
+            return retVal;
+        }
     }
 }

@@ -30,8 +30,8 @@ namespace usf_asgmt3_api.Controllers
         public List<Symbol> SyncSymbols()
         {
 
-            var repo = new IxTradingRepo();
-            var list = repo.GetSymbolsAsync().Result;
+          
+            var list = iIxTradingRepo.GetSymbolsAsync().Result;
             int i = 0;
 
             foreach (var item in list)
@@ -69,29 +69,25 @@ namespace usf_asgmt3_api.Controllers
         public bool SyncSymbolPrices(List<string> symbols)
         {
 
-            var intrinio = new IntrinioRepo();
-            //var list = new List<string> { symbol };
+            var list = iIxTradingRepo.GetCompanyPricesAsync(symbols).Result;
 
-            DateTime now = DateTime.Now.Date;
-            DateTime start = now.AddYears(-1);
-            string frequency = "daily";
             foreach (var symbol in symbols)
             {
-                var cleanedSymbol = symbol?.ToUpper();
+                dbContext.Company_Prices.FromSql($"Delete from dbo.Company_Prices where symbol = '{symbol}'");
+            }
+            dbContext.SaveChanges();
 
-                var list = intrinio.GetCompanyPriceAsync(cleanedSymbol, frequency, start, now).Result;
-
-                // clean old data
-                //dbContext.Prices.FromSql($"Delete from dbo.Prices where ticket = '{cleanedSymbol}'");
-
-                //todo add repo for db
+            foreach (var symbol in symbols)
+            {
                 foreach (var item in list)
                 {
-                    item.ticker = cleanedSymbol;
-                    dbContext.Prices.Add(item);
+                    dbContext.Company_Prices.Add(item);
                 }
+
                 dbContext.SaveChanges();
+
             }
+
             return true;
         }
 
@@ -169,6 +165,12 @@ namespace usf_asgmt3_api.Controllers
         public Company_Detail GetStockDetail(string symbol)
         {
             return dbContext.Company_Details.SingleOrDefault(a => a.symbol.ToLower() == symbol.ToLower());
+        }
+
+        [HttpGet("/stock/getStockPrices/{symbol}")]
+        public List<Company_Price> GetStockPrices(string symbol)
+        {
+            return dbContext.Company_Prices.Where(a => a.symbol.ToLower() == symbol.ToLower()).ToList();
         }
     }
 }
